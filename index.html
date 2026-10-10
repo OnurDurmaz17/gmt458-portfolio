@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onur Durmaz | Geomatics Engineering</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="index.html" class="logo">ONUR DURMAZ</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Me</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="maps.html">Web Maps</a></li>
+                <li>
+                    <button id="themeToggle" class="theme-switch">
+                        <span id="themeIcon">🌙</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="earth-container">
+            <div id="earth" class="earth"></div>
+        </div>
+
+        <section id="home" class="hero">
+            <div class="hero-text">
+                <p class="subtitle">GEOMATICS ENGINEERING STUDENT</p>
+                <h1>Hello, I'm <br><span class="name-nowrap">Onur DURMAZ.</span></h1>
+                
+                <!-- Surveying kelimesi <br> etiketi ile kesin olarak alt satıra alındı -->
+                <p class="description">
+                    I am a Geomatics Engineering student interested in GIS,<br> 
+                    surveying, remote sensing and web mapping.
+                </p>
+                
+                <a href="projects.html" class="button">Explore My Projects</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Onur Durmaz. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode'); themeIcon.textContent = '☀️';
+        }
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            if (document.body.classList.contains('light-mode')) {
+                themeIcon.textContent = '☀️'; localStorage.setItem('theme', 'light');
+            } else {
+                themeIcon.textContent = '🌙'; localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        const links = document.querySelectorAll('nav ul a, .button');
+        const earth = document.getElementById('earth');
+
+        links.forEach(link => {
+            link.addEventListener('click', function(event) {
+                const targetUrl = this.getAttribute('href');
+                
+                if (targetUrl && targetUrl !== "index.html" && !this.classList.contains('logo') && !targetUrl.startsWith('#')) {
+                    event.preventDefault(); 
+                    
+                    const computedStyle = window.getComputedStyle(earth);
+                    const currentBgPos = computedStyle.getPropertyValue('background-position');
+                    earth.style.backgroundPosition = currentBgPos;
+                    
+                    earth.style.animation = "none"; 
+                    void earth.offsetWidth;
+                    
+                    if (targetUrl === 'about.html') earth.classList.add('zoom-europe');
+                    else if (targetUrl === 'projects.html') earth.classList.add('zoom-america');
+                    else if (targetUrl === 'maps.html') earth.classList.add('zoom-asia');
+
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 1500);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
