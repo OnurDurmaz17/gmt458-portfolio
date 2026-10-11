@@ -8,7 +8,6 @@
 </head>
 <body>
     
-    <!-- Projeler için Amerika/Afrika boylamı süzülme sınıfı -->
     <div class="subpage-bg bg-america"></div>
 
     <header>
@@ -43,22 +42,28 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><img src="https://images.unsplash.com/photo-1602980068989-11425cbfa713?q=80&w=300&auto=format&fit=crop" alt="Wildfire Mapping"></td>
+                    <td><img src="https://plus.unsplash.com/premium_photo-1727061208519-2753e87b6a18?q=80&w=1874&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" alt="Wildfire Mapping"></td>
                     <td>Marmaris Wildfire Analysis</td>
                     <td>Burn severity mapping and spatial analysis of the Marmaris region to evaluate ecological impact.</td>
                     <td>QGIS, Google Earth Engine</td>
                 </tr>
                 <tr>
-                    <td><img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=300&auto=format&fit=crop" alt="Dot Density"></td>
+                    <td><img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=300&q=80" alt="Dot Density"></td>
                     <td>Dot Density Mapping</td>
                     <td>Visualizing population distribution and demographic shifts using dot density spatial techniques.</td>
                     <td>OpenCV, Python</td>
                 </tr>
                 <tr>
-                    <td><img src="https://images.unsplash.com/photo-1622322634458-15b5e1b20468?q=80&w=300&auto=format&fit=crop" alt="Cadastral"></td>
+                    <td><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=300&q=80" alt="Cadastral"></td>
                     <td>Cadastral Surveying</td>
                     <td>Field land surveying, boundary calculations, and cadastral registration workflows.</td>
                     <td>MicroStation, TAKBİS</td>
+                </tr>
+                <tr>
+                    <td><img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=300&q=80" alt="Highway Design"></td>
+                    <td>Highway Design & Drafting</td>
+                    <td>Designing road alignments, geometric planning, and engineering project drafting.</td>
+                    <td>MicroStation</td>
                 </tr>
             </tbody>
         </table>
@@ -69,50 +74,40 @@
     </footer>
 
     <script>
-        // Tema Kontrolü
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         if (localStorage.getItem('theme') === 'light') {
-            document.body.classList.add('light-mode'); themeIcon.textContent = '☀️';
+            document.body.classList.add('light-mode');
+            themeIcon.textContent = '☀️';
         }
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('light-mode');
             if (document.body.classList.contains('light-mode')) {
-                themeIcon.textContent = '☀️'; localStorage.setItem('theme', 'light');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
             } else {
-                themeIcon.textContent = '🌙'; localStorage.setItem('theme', 'dark');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
             }
         });
 
-        // Alt Sayfadan Başka Sayfaya Geçerken Akıcı Harita Kaydırma
         const links = document.querySelectorAll('nav ul a, .button');
         const bg = document.querySelector('.subpage-bg');
-
         links.forEach(link => {
             link.addEventListener('click', function(event) {
                 const targetUrl = this.getAttribute('href');
-                
                 if (targetUrl && !this.classList.contains('logo') && !targetUrl.startsWith('#') && targetUrl !== 'projects.html') {
                     event.preventDefault(); 
-                    
                     if (bg) {
-                        // O anki süzülme pozisyonunu dondur (zıplamayı önler)
                         const computedStyle = window.getComputedStyle(bg);
-                        const currentBgPos = computedStyle.getPropertyValue('background-position');
-                        bg.style.backgroundPosition = currentBgPos;
+                        bg.style.backgroundPosition = computedStyle.getPropertyValue('background-position');
                         bg.style.animation = "none"; 
                         void bg.offsetWidth; 
-
-                        // Tıklanan sayfaya göre arkaplanı yeni kıtaya kaydır
                         if (targetUrl === 'index.html') bg.style.backgroundPosition = "50% 50%"; 
-                        else if (targetUrl === 'about.html') bg.style.backgroundPosition = "48% 30%"; // Avrupa
-                        else if (targetUrl === 'maps.html') bg.style.backgroundPosition = "75% 40%"; // Asya
+                        else if (targetUrl === 'about.html') bg.style.backgroundPosition = "48% 30%"; 
+                        else if (targetUrl === 'maps.html') bg.style.backgroundPosition = "75% 40%";
                     }
-
-                    // 1.5 saniye kaymayı izlettikten sonra sayfaya git
-                    setTimeout(() => {
-                        window.location.href = targetUrl;
-                    }, 1500);
+                    setTimeout(() => window.location.href = targetUrl, 1500);
                 }
             });
         });

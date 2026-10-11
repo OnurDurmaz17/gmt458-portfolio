@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Maps | Onur Durmaz</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css" />
+    <script src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js"></script>
+</head>
+<body>
+    
+    <div class="subpage-bg bg-asia"></div>
+
+    <header>
+        <nav>
+            <a href="index.html" class="logo">ONUR DURMAZ</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Me</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="maps.html">Web Maps</a></li>
+                <li>
+                    <button id="themeToggle" class="theme-switch">
+                        <span id="themeIcon">🌙</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="page-content">
+        <h1>Web Maps</h1>
+        <p class="subtitle">Spatial Solutions: Zoom Threshold & No-Wrap Implementations</p>
+
+        <div class="maps-container">
+            
+            <!-- OpenLayers Kartı -->
+            <div class="map-card">
+                <h2>OpenLayers Integration</h2>
+                <div id="ol-map" class="map-frame"></div>
+            </div>
+
+            <!-- Leaflet Kartı -->
+            <div class="map-card">
+                <h2>Leaflet Integration</h2>
+                <div id="leaflet-map" class="map-frame"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Onur Durmaz. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode'); themeIcon.textContent = '☀️';
+        }
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            if (document.body.classList.contains('light-mode')) {
+                themeIcon.textContent = '☀️'; localStorage.setItem('theme', 'light');
+            } else {
+                themeIcon.textContent = '🌙'; localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        const links = document.querySelectorAll('nav ul a, .button');
+        const bg = document.querySelector('.subpage-bg');
+        links.forEach(link => {
+            link.addEventListener('click', function(event) {
+                const targetUrl = this.getAttribute('href');
+                if (targetUrl && !this.classList.contains('logo') && !targetUrl.startsWith('#') && targetUrl !== 'maps.html') {
+                    event.preventDefault(); 
+                    if (bg) {
+                        const computedStyle = window.getComputedStyle(bg);
+                        bg.style.backgroundPosition = computedStyle.getPropertyValue('background-position');
+                        bg.style.animation = "none"; 
+                        void bg.offsetWidth; 
+                        if (targetUrl === 'index.html') bg.style.backgroundPosition = "50% 50%"; 
+                        else if (targetUrl === 'about.html') bg.style.backgroundPosition = "48% 30%"; 
+                        else if (targetUrl === 'projects.html') bg.style.backgroundPosition = "20% 40%";
+                    }
+                    setTimeout(() => window.location.href = targetUrl, 1500);
+                }
+            });
+        });
+
+        const locations = [
+            { name: "Ankara (Hacettepe)", lat: 39.868, lon: 32.735 },
+            { name: "Rome", lat: 41.9028, lon: 12.4964 },
+            { name: "Venice", lat: 45.4408, lon: 12.3155 },
+            { name: "Milan", lat: 45.4642, lon: 9.1900 },
+            { name: "Zurich", lat: 47.3769, lon: 8.5417 }
+        ];
+
+        const lMap = L.map('leaflet-map').setView([43.0, 15.0], 4);
+        
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '&copy; Esri',
+            noWrap: true,
+            bounds: [[-90, -180], [90, 180]]
+        }).addTo(lMap);
+
+        const markerGroup = L.layerGroup();
+        locations.forEach(loc => {
+            L.marker([loc.lat, loc.lon]).bindPopup(loc.name).addTo(markerGroup);
+        });
+
+        lMap.on('zoomend', function() {
+            if (lMap.getZoom() >= 5) {
+                lMap.addLayer(markerGroup);
+            } else {
+                lMap.removeLayer(markerGroup);
+            }
+        });
+
+        const olFeatures = locations.map(loc => {
+            return new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.fromLonLat([loc.lon, loc.lat]))
+            });
+        });
+
+        const vectorSource = new ol.source.Vector({ features: olFeatures });
+
+        const vectorLayer = new ol.layer.Vector({
+            source: vectorSource,
+            style: new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 6,
+                    fill: new ol.style.Fill({ color: '#3b82f6' }),
+                    stroke: new ol.style.Stroke({ color: '#ffffff', width: 2 })
+                })
+            }),
+            minZoom: 5 
+        });
+
+        const olMap = new ol.Map({
+            target: 'ol-map',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM({
+                        wrapX: false // Dünyanın tekrar etmesini engeller (Issue 2)
+                    })
+                }),
+                vectorLayer
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([15.0, 43.0]),
+                zoom: 4,
+                extent: ol.proj.transformExtent([-180, -90, 180, 90], 'EPSG:4326', 'EPSG:3857')
+            })
+        });
+    </script>
+</body>
+</html>

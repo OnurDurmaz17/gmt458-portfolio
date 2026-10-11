@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me | Onur Durmaz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="subpage-bg bg-europe"></div>
+
+    <header>
+        <nav>
+            <a href="index.html" class="logo">ONUR DURMAZ</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Me</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="maps.html">Web Maps</a></li>
+                <li>
+                    <button id="themeToggle" class="theme-switch">
+                        <span id="themeIcon">🌙</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="page-content">
+        <h1>About Me</h1>
+        <p class="subtitle">Get to know the person behind the maps</p>
+
+        <div class="about-container">
+            
+            <!-- Biyografi -->
+            <div class="about-card">
+                <h2>Biography</h2>
+                <p>Hello! I am Onur Durmaz, a fourth-year Geomatics Engineering student at Hacettepe University. I am passionate about spatial data analysis, field surveying, and web mapping. I enjoy combining engineering precision with modern software technologies to solve spatial problems and create interactive visualizations.</p>
+            </div>
+
+            <!-- Eğitim ve Deneyim -->
+            <div class="about-card">
+                <h2>Experience & Education</h2>
+                <ul>
+                    <li>
+                        <strong>Hacettepe University</strong><br>
+                        BSc in Geomatics Engineering (Senior Year)
+                    </li>
+                    <li>
+                        <strong>Engineering Intern</strong> - Denizli Çivril Lisanslı Harita Kadastro Mühendislik Bürosu (Sep 2026)<br>
+                        Conducted construction measurements, field land surveying, cadastral boundary calculations, and TAKBİS data entry using tools like MicroStation and Total Station.
+                    </li>
+                    <li>
+                        <strong>Engineering Intern</strong> - SOM Proje (Summer 2025)<br>
+                        Gained practical experience in road design, alignment calculations, and engineering project drafting.
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Teknik Yetenekler -->
+            <div class="about-card">
+                <h2>Technical Skills</h2>
+                <p><strong>Geomatics & GIS Software:</strong> QGIS, Google Earth Engine, MicroStation</p>
+                <p><strong>Programming & Development:</strong> Python, HTML/CSS, JavaScript (OpenLayers, Leaflet), Flutter</p>
+                <p><strong>Design & Tools:</strong> VS Code, Photoshop, GIMP, OpenCV</p>
+            </div>
+
+            <!-- İlgi Alanları -->
+            <div class="about-card">
+                <h2>Interests & Hobbies</h2>
+                <p>Beyond engineering, my main interests include photography, cinema, and history. I am highly passionate about technology literacy and closely follow the latest technological advancements. I also deeply enjoy taking cultural trips to explore the architectural and historical heritage of different cities and countries.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Onur Durmaz. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode'); themeIcon.textContent = '☀️';
+        }
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            if (document.body.classList.contains('light-mode')) {
+                themeIcon.textContent = '☀️'; localStorage.setItem('theme', 'light');
+            } else {
+                themeIcon.textContent = '🌙'; localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        const links = document.querySelectorAll('nav ul a, .button');
+        const bg = document.querySelector('.subpage-bg');
+        links.forEach(link => {
+            link.addEventListener('click', function(event) {
+                const targetUrl = this.getAttribute('href');
+                if (targetUrl && !this.classList.contains('logo') && !targetUrl.startsWith('#') && targetUrl !== 'about.html') {
+                    event.preventDefault(); 
+                    if (bg) {
+                        const computedStyle = window.getComputedStyle(bg);
+                        bg.style.backgroundPosition = computedStyle.getPropertyValue('background-position');
+                        bg.style.animation = "none"; 
+                        void bg.offsetWidth; 
+                        if (targetUrl === 'index.html') bg.style.backgroundPosition = "50% 50%"; 
+                        else if (targetUrl === 'projects.html') bg.style.backgroundPosition = "20% 40%"; 
+                        else if (targetUrl === 'maps.html') bg.style.backgroundPosition = "75% 40%";
+                    }
+                    setTimeout(() => window.location.href = targetUrl, 1500);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
