@@ -23,7 +23,7 @@ To maintain a professional look, the map is restricted from repeating multiple c
 * **Leaflet Solution:** Configured the base tile layer with the `noWrap: true` parameter and enforced absolute panning limits using the `bounds` property.
 * **OpenLayers Solution:** Implemented by setting `wrapX: false` on the OpenStreetMap source and locking the view's scrolling limits using the `extent` property.
 
----
+-----
 
 ## ✨ Features Highlighted
 * **Dynamic Day/Night Theme:** A fully responsive light and dark mode toggle that updates the UI styling and swaps the textures on the 3D globe.
